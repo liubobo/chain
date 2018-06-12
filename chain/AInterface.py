@@ -15,7 +15,7 @@ for ui in   UIReform.gen_uis():
         s = ''' 
         ${name} = [UIButton km_makeButton:^(KMButtonMaker *make) {
 
-        make.titleForState(<#(nullable NSString *)#>, UIControlStateNormal).textFont(kFont15).addTargetAndActionForControlEvents(self, @selector(${tname}ButtonTouchUpInside:), UIControlEventTouchUpInside).frame(CGRectMake(<#CGFloat x#>, <#CGFloat y#>, <#CGFloat width#>, <#CGFloat height#>)).backgroundColor([UIColor redColor]).addToSuperView(<#(nonnull UIView *)#>).addMasorny(^(MASConstraintMaker *maker) {
+        make.titleForState(<#(nullable NSString *)#>, UIControlStateNormal).textFont(kFont15).addTargetAndActionForControlEvents(self, @selector(${tname}ButtonTouchUpInside:), UIControlEventTouchUpInside).frame(frame(<#CGRect frame#>)).backgroundColor([UIColor redColor]).addToSuperView(<#(nonnull UIView *)#>).addMasorny(^(MASConstraintMaker *maker) {
 
         });
         }]
@@ -38,7 +38,7 @@ for ui in   UIReform.gen_uis():
     if ui.type == 'UIImageView':
         s = '''     [UIImageView km_makeImageView: ^ (KMImageViewMaker * make)
         {
-            make.image( <  # UIImage *image#>).frame(<#CGRect frame#>).addToSuperView(<#UIView *superView#>);;
+            make.image( <#UIImage *image#>).frame(<#CGRect frame#>).addToSuperView(<#UIView *superView#>);;
         }];
                    '''
         s = string.Template(s).safe_substitute(
