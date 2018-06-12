@@ -22,7 +22,28 @@ for ui in   UIReform.gen_uis():
         '''
         s = string.Template(s).safe_substitute({'name': '_'+ui.name if ui.isProp else ui.name,'tname':ui.name})
 
-        print s
+
+    if ui.type == 'UILabel':
+        s = '''
+                [UILabel km_makeLabel:^(KMLabelMaker *make){
+        
+        make.font(kFont15).tintColor([UIColor redColor]).frame(<#CGRect frame#>).addToSuperView(<#UIView *superView#>);
+
+    }];
+              '''
+        s = string.Template(s).safe_substitute(
+            {'name': '_' + ui.name if ui.isProp else ui.name, 'tname': ui.name, 'type': ui.type})
+
+
+    if ui.type == 'UIImageView':
+        s = '''     [UIImageView km_makeImageView: ^ (KMImageViewMaker * make)
+        {
+            make.image( <  # UIImage *image#>).frame(<#CGRect frame#>).addToSuperView(<#UIView *superView#>);;
+        }];
+                   '''
+        s = string.Template(s).safe_substitute(
+            {'name': '_' + ui.name if ui.isProp else ui.name, 'tname': ui.name, 'type': ui.type})
+
     else:
         s = '''
          ${name} = [ ${type} km_makeView:^(KMUIViewMaker *make) {
@@ -31,4 +52,5 @@ for ui in   UIReform.gen_uis():
         '''
         s = string.Template(s).safe_substitute({'name': '_'+ui.name if ui.isProp else ui.name,'tname':ui.name,'type':ui.type})
 
-        print s
+
+    print s
