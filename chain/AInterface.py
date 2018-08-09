@@ -9,48 +9,53 @@ sys.setdefaultencoding('utf8')
 
 # simulate(u'uibutton *bb;\nuibutton *bb\nuibutton *bb\nuibutton *bb\n@property (nonatomic, strong) UIButton *bxx;')
 
+# simulate(u' UIButton *v')
+
 for ui in   UIReform.gen_uis():
+
+    ui_type = ui.type+ '*' if not ui.isProp  else ''
 
     if ui.type == 'UIButton':
         s = ''' 
-        ${name} = [UIButton km_makeButton:^(KMButtonMaker *make) {
+        ${mtype}${name} = [UIButton km_makeButton:^(KMButtonMaker *make) {
 
-        make.titleForState(<#(nullable NSString *)#>, UIControlStateNormal).textFont(kFont15).addTargetAndActionForControlEvents(self, @selector(${tname}ButtonTouchUpInside:), UIControlEventTouchUpInside).frame(frame(<#CGRect frame#>)).backgroundColor([UIColor redColor]).addToSuperView(<#(nonnull UIView *)#>).addMasorny(^(MASConstraintMaker *maker) {
+        make.titleForState(@"", UIControlStateNormal).textFont(kFont15).addTargetAndActionForControlEvents(self, @selector(${tname}ButtonTouchUpInside:), UIControlEventTouchUpInside).frame(CGRectMake(0, 0, 0, 0)).backgroundColor([UIColor redColor]).addToSuperView(<#(nonnull UIView *)#>).addMasorny(^(MASConstraintMaker *maker) {
 
         });
-        }]
+        }];
         '''
-        s = string.Template(s).safe_substitute({'name': '_'+ui.name if ui.isProp else ui.name,'tname':ui.name})
+        s = string.Template(s).safe_substitute({'name': '_'+ui.name if ui.isProp else ui.name,'tname':ui.name,'mtype':ui_type})
 
 
-    if ui.type == 'UILabel':
+    elif  ui.type == 'UILabel':
         s = '''
-                [UILabel km_makeLabel:^(KMLabelMaker *make){
+        ${mtype}${name} = [UILabel km_makeLabel:^(KMLabelMaker *make){
         
         make.font(kFont15).tintColor([UIColor redColor]).frame(<#CGRect frame#>).addToSuperView(<#UIView *superView#>);
 
     }];
               '''
         s = string.Template(s).safe_substitute(
-            {'name': '_' + ui.name if ui.isProp else ui.name, 'tname': ui.name, 'type': ui.type})
+            {'name': '_' + ui.name if ui.isProp else ui.name, 'tname': ui.name, 'type': ui.type,'mtype':ui_type})
 
 
-    if ui.type == 'UIImageView':
-        s = '''     [UIImageView km_makeImageView: ^ (KMImageViewMaker * make)
+    elif ui.type == 'UIImageView':
+        s = '''  ${mtype}${name} = [UIImageView km_makeImageView: ^ (KMImageViewMaker * make)
         {
             make.image( <#UIImage *image#>).frame(<#CGRect frame#>).addToSuperView(<#UIView *superView#>);;
         }];
                    '''
         s = string.Template(s).safe_substitute(
-            {'name': '_' + ui.name if ui.isProp else ui.name, 'tname': ui.name, 'type': ui.type})
+            {'name': '_' + ui.name if ui.isProp else ui.name, 'tname': ui.name, 'type': ui.type,'mtype':ui_type})
 
     else:
         s = '''
-         ${name} = [ ${type} km_makeView:^(KMUIViewMaker *make) {
+         ${mtype}${name}  = [ ${type} km_makeView:^(KMUIViewMaker *make) {
           make.frame(CGRectMake(<#CGFloat x#>, <#CGFloat y#>, <#CGFloat width#>, <#CGFloat height#>)).backgroundColor([UIColor redColor]).addToSuperView(<#(nonnull UIView *)#>);
         }];
         '''
-        s = string.Template(s).safe_substitute({'name': '_'+ui.name if ui.isProp else ui.name,'tname':ui.name,'type':ui.type})
+        s = string.Template(s).safe_substitute({'name': '_'+ui.name if ui.isProp else ui.name,'tname':ui.name,'type':ui.type,'mtype':ui_type})
 
 
     print s
+
